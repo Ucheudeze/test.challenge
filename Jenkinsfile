@@ -9,19 +9,9 @@ pipeline{
             git branch: 'main', credentialsId: 'ucheudeze', url: 'https://github.com/Ucheudeze/test.challenge.git'
         }
     }
-        stage('Terraform init'){
+        stage('Terraform destroy'){
             steps{
-            sh 'terraform init'
-        }
-        }
-        stage('Terraform plan'){
-            steps{
-            sh 'terraform plan'
-        }
-        }
-        stage('Terraform apply'){
-            steps{
-            sh 'terraform apply --auto-approve'
+            sh 'terraform destroy --auto-approve'
         }
         }
     }
