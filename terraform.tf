@@ -120,7 +120,7 @@ resource "aws_instance" "instance1" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.profile.name
-  subnet_id         = aws_subnet.pubsn.id
+  subnet_id         = aws_subnet.pubsn1.id
   availability_zone = "us-east-2a"
   associate_public_ip_address = true
   key_name = "test"
