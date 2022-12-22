@@ -119,7 +119,7 @@ resource "aws_security_group" "sg" {
 resource "aws_instance" "instance1" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.profile.name
+  #iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id         = aws_subnet.pubsn1.id
   availability_zone = "us-east-2a"
   associate_public_ip_address = true
@@ -156,7 +156,7 @@ resource "aws_instance" "instance1" {
 resource "aws_instance" "instance2" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.profile.name
+  #iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id         = aws_subnet.pubsn2.id
   availability_zone = "us-east-2b"
   associate_public_ip_address = true
@@ -316,9 +316,9 @@ resource "aws_iam_policy_attachment" "attach" {
   policy_arn = aws_iam_policy.dynamodb-policy.arn
 }
 
-resource "aws_iam_instance_profile" "profile" {
-  name = "profile"
-  role = aws_iam_role.role.name
-}
+#resource "aws_iam_instance_profile" "profile" {
+  #name = "profile"
+  #role = aws_iam_role.role.name
+#}
 
 
