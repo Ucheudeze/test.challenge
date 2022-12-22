@@ -4,9 +4,9 @@ provider "aws" {
 }
  
 # Create a VPC
-#resource "aws_vpc" "uturn" {
-  #cidr_block = "10.0.0.0/16"
-#}
+resource "aws_vpc" "uturn" {
+  cidr_block = "10.0.0.0/16"
+}
  
 # Create public subnets
 resource "aws_subnet" "pubsn1" {
