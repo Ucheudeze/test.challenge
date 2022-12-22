@@ -221,6 +221,7 @@ resource "aws_lb_target_group" "tg" {
   }
 }
 
+# Attach target group to instances
 resource "aws_lb_target_group_attachment" "tg_attachment_1" {
     target_group_arn = aws_lb_target_group.tg.arn
     target_id        = aws_instance.instance1.id
@@ -246,7 +247,7 @@ resource "aws_lb_listener" "listener" {
   }
 }
  
- 
+# Create dynamoDb table
 resource "aws_dynamodb_table" "candidate-table" {
   name           = "Candidates"
   billing_mode   = "PAY_PER_REQUEST"
@@ -269,6 +270,7 @@ resource "aws_dynamodb_table" "candidate-table" {
   }
 }
 
+# Create IAM policy for DynamoDB  permission to accesss
 resource "aws_iam_policy" "dynamodb-policy" {
   name        = "dynamodb-Access-Policy"
   description = "Provides permission to access dynamodb"
@@ -290,6 +292,7 @@ resource "aws_iam_policy" "dynamodb-policy" {
   )
 }
 
+# create EC2 role for DynamoDB policy access
 resource "aws_iam_role" "role" {
   name = "ec2_role"
 
@@ -308,6 +311,7 @@ resource "aws_iam_role" "role" {
   })
 }
 
+# Attach EC2 role and DynamoDb policy
 resource "aws_iam_policy_attachment" "attach" {
   name       = "attachment"
   roles      = [aws_iam_role.role.name]
