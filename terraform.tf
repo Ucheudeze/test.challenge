@@ -1,4 +1,4 @@
-#Configure the AWS Provider
+# Configure the AWS Provider
 provider "aws" {
   region = "us-east-2"
 }
@@ -119,10 +119,11 @@ resource "aws_security_group" "sg" {
 resource "aws_instance" "instance1" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
+  iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id         = aws_subnet.pubsn1.id
   availability_zone = "us-east-2a"
   associate_public_ip_address = true
-  key_name = "test"
+  key_name = "uche2"
   security_groups = [aws_security_group.sg.id]
   tags = {
     "Name" = "ubuntu-1"
@@ -155,10 +156,11 @@ resource "aws_instance" "instance1" {
 resource "aws_instance" "instance2" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
+  iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id         = aws_subnet.pubsn2.id
   availability_zone = "us-east-2b"
   associate_public_ip_address = true
-  key_name = "test"
+  key_name = "uche2"
   security_groups = [aws_security_group.sg.id]
   tags = {
     "Name" = "ubuntu-2"
@@ -182,7 +184,6 @@ resource "aws_instance" "instance2" {
   sudo pip install -r requirements.txt 
   sudo apt install gunicorn -y
   sudo gunicorn -b 0.0.0.0 app:candidates_app &
-
 
 
   EOF
@@ -221,7 +222,6 @@ resource "aws_lb_target_group" "tg" {
   }
 }
 
-# Attach target group to instances
 resource "aws_lb_target_group_attachment" "tg_attachment_1" {
     target_group_arn = aws_lb_target_group.tg.arn
     target_id        = aws_instance.instance1.id
@@ -247,7 +247,8 @@ resource "aws_lb_listener" "listener" {
   }
 }
  
-# Create dynamoDb table
+ 
+ # Create DynamoDb
 resource "aws_dynamodb_table" "candidate-table" {
   name           = "Candidates"
   billing_mode   = "PAY_PER_REQUEST"
@@ -270,7 +271,7 @@ resource "aws_dynamodb_table" "candidate-table" {
   }
 }
 
-# Create IAM policy for DynamoDB  permission to accesss
+# Create DynamoDb policy
 resource "aws_iam_policy" "dynamodb-policy" {
   name        = "dynamodb-Access-Policy"
   description = "Provides permission to access dynamodb"
@@ -292,7 +293,7 @@ resource "aws_iam_policy" "dynamodb-policy" {
   )
 }
 
-# create EC2 role for DynamoDB policy access
+# Create EC2 Role
 resource "aws_iam_role" "role" {
   name = "ec2_role"
 
@@ -311,11 +312,17 @@ resource "aws_iam_role" "role" {
   })
 }
 
-# Attach EC2 role and DynamoDb policy
+# Attach EC2 role and DYnamoDb policy
 resource "aws_iam_policy_attachment" "attach" {
   name       = "attachment"
   roles      = [aws_iam_role.role.name]
   policy_arn = aws_iam_policy.dynamodb-policy.arn
+}
+
+# Create Instance profile
+resource "aws_iam_instance_profile" "profile" {
+  name = "profile"
+  role = aws_iam_role.role.name
 }
 
 
