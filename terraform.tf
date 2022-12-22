@@ -120,7 +120,7 @@ resource "aws_instance" "instance1" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
   iam_instance_profile = aws_iam_instance_profile.profile1.name
-  subnet_id         = aws_subnet.pubsn1.id
+  subnet_id         = aws_subnet.pubsn.id
   availability_zone = "us-east-2a"
   associate_public_ip_address = true
   key_name = "test"
@@ -156,7 +156,7 @@ resource "aws_instance" "instance1" {
 resource "aws_instance" "instance2" {
   ami               = "ami-0283a57753b18025b"
   instance_type     = "t2.micro"
-  iam_instance_profile = aws_iam_instance_profile.profile1.name
+  iam_instance_profile = aws_iam_instance_profile.profile.name
   subnet_id         = aws_subnet.pubsn2.id
   availability_zone = "us-east-2b"
   associate_public_ip_address = true
@@ -186,24 +186,6 @@ resource "aws_instance" "instance2" {
   sudo gunicorn -b 0.0.0.0 app:candidates_app &
 
 
-
-  touch /etc/systemd/system/flask.service
-
-  echo "[Unit]" >> /etc/systemd/system/flask.service
-  echo "Description=flask_service" >> /etc/systemd/system/flask.service
-
-  echo "[Service]" >> /etc/systemd/system/flask.service
-  echo "ExecStart=/bin/bash -c 'cd /home/ubuntu/flask/2022-Challenge-/ &&  gunicorn -b 0.0.0.0 app:candidates_app'" >> /etc/systemd/system/flask.service
-  echo "ExecStartPost=/bin/bash -c 'cd /home/ubuntu/flask/2022-Challenge-/ && python3 test_candidates.py'" >> /etc/systemd/system/flask.service
-  echo "ExecStop=" >> /etc/systemd/system/flask.service
-  echo "Type=forking" >> /etc/systemd/system/flask.service
-  echo "TimeoutStartSec=300" >> /etc/systemd/system/flask.service
-  echo "TimeoutStopSec=300" >> /etc/systemd/system/flask.service
-
-  echo "[Install]" >> /etc/systemd/system/flask.service
-  echo "WantedBy=multi-user.target" >> /etc/systemd/system/flask.service
-
-  sudo systemctl enable flask.service
 
   EOF
 }
@@ -334,7 +316,7 @@ resource "aws_iam_policy_attachment" "attach" {
   policy_arn = aws_iam_policy.dynamodb-policy.arn
 }
 
-resource "aws_iam_instance_profile" "profile1" {
+resource "aws_iam_instance_profile" "profile" {
   name = "profile"
   role = aws_iam_role.role.name
 }
